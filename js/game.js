@@ -13,10 +13,19 @@ fg.src = "img/flappy_bird_fg.png";
 pipeUp.src = "img/flappy_bird_pipeUp.png";
 pipeBottom.src = "img/flappy_bird_pipeBottom.png";
 
+const fly = new Audio();
+const scoreAudio = new Audio();
+
+fly.src = "audio/fly.mp3"
+scoreAudio.src = "audio/score.mp3"
+
+const gap = 90;
+
 document.addEventListener("keydown", moveUp);
 
 function moveUp() {
     yPos -= 30;
+    fly.play();
 }
 
 const pipe = [];
@@ -25,8 +34,6 @@ pipe[0] = {
     y: 0
 }
 let score = 0;
-
-const gap = 90;
 const xPos = 10;
 let yPos = 150;
 const grav = 1.5;
@@ -39,7 +46,7 @@ function draw() {
         ctx.drawImage(pipeBottom, pipe[i].x, pipe[i].y + pipeUp.height + gap);
         pipe[i].x--;
 
-        if (pipe[i].x == 130) {
+        if (pipe[i].x == 100) {
             pipe.push({
                 x: cvs.width,
                 y: Math.floor(Math.random() * pipeUp.height) - pipeUp.height
@@ -49,18 +56,20 @@ function draw() {
         if (xPos + bird.width >= pipe[i].x
             && xPos <= pipe[i].x + pipeUp.width
             && (yPos <= pipe[i].y + pipeUp.height
-                || yPos + bird.height >= pipe[i].y + pipeUp.height + gap) || yPos + bird.height >= cvs.height - fg.height) {
-            location.reload();
-        }
-    if (pipe[i].x == 5) {
+                || yPos + bird.height >= pipe[i].y + pipeUp.height + gap)
+            || yPos + bird.height >= cvs.height - fg.height) {
+                location.reload();
+                }
+
+        if (pipe[i].x == 5) {
         score++
-    }
+        scoreAudio.play();
+         }
 
     }
 
 
     ctx.drawImage(fg, 0, cvs.height - fg.height);
-
     ctx.drawImage(bird, xPos, yPos);
 
     yPos += grav;
