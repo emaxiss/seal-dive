@@ -13,23 +13,46 @@ fg.src = "img/flappy_bird_fg.png";
 pipeUp.src = "img/flappy_bird_pipeUp.png";
 pipeBottom.src = "img/flappy_bird_pipeBottom.png";
 
+document.addEventListener("keydown", moveUp);
+
+function moveUp() {
+    yPos -= 30;
+}
+
 const pipe = [];
 pipe[0] = {
-    x : cvs.width,
-    y : 0
+    x: cvs.width,
+    y: 0
 }
 
 const gap = 90;
 const xPos = 10;
 let yPos = 150;
-const grav = 1;
+const grav = 1.5;
 
 function draw() {
     ctx.drawImage(bg, 0, 0);
     for (let i = 0; i < pipe.length; i++) {
         ctx.drawImage(pipeUp, pipe[i].x, pipe[i].y);
         ctx.drawImage(pipeBottom, pipe[i].x, pipe[i].y + pipeUp.height + gap);
-    pipe[i].x--;
+        pipe[i].x--;
+
+        if (pipe[i].x == 130) {
+            pipe.push({
+                x: cvs.width,
+                y: Math.floor(Math.random() * pipeUp.height) - pipeUp.height
+            })
+        }
+
+        if (xPos + bird.width >= pipe[i].x
+            && xPos <= pipe[i].x + pipeUp.width
+            && (yPos <= pipe[i].y + pipeUp.height
+                || yPos + bird.height >= pipe[i].y + pipeUp.height + gap)) {
+                location.reload();
+        }
+
+
+
     }
 
 
@@ -43,8 +66,5 @@ function draw() {
 
 pipeBottom.onload = draw;
 
-document.addEventListener("keydown", moveUp);
 
-function moveUp() {
-    yPos -= 30;
-}
+
