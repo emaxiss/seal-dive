@@ -21,10 +21,10 @@ scoreAudio.src = "audio/score.mp3"
 
 const gap = 90;
 
-document.addEventListener("keydown", moveUp);
+document.addEventListener("mousedown", moveUp);
 
 function moveUp() {
-    yPos -= 30;
+    yPos -= 40;
     fly.play();
 }
 
