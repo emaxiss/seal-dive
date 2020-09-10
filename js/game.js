@@ -1,0 +1,1 @@
+alert("Hello This is Flappy Bird Like game")
