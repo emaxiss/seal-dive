@@ -19,7 +19,7 @@ const scoreAudio = new Audio();
 fly.src = "audio/fly.mp3"
 scoreAudio.src = "audio/score.mp3"
 
-const gap = 90;
+const gap = 88;
 
 document.addEventListener("mousedown", moveUp);
 
