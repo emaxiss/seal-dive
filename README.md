@@ -1,8 +1,6 @@
 # Seal Dive
 
-A small ocean arcade game. Help the seal swim through the gaps between the ice and the rocks.
-
-**[Play in your browser →](https://emaxiss.github.io/JS_FlappyBirdLikeGame/)**
+A seal, some ice, some rocks, and a lot of "one more try".
 
 <p>
   <img src="docs/start.png" width="240" alt="Title screen">
@@ -10,30 +8,34 @@ A small ocean arcade game. Help the seal swim through the gaps between the ice a
   <img src="docs/game-over.png" width="240" alt="Game over card">
 </p>
 
-## Controls
+## How it started
 
-| Action       | Keys                          |
+Back in 2020 this was a plain Flappy Bird clone I wrote while learning JavaScript. It sat here untouched for years.
+
+Then a certain someone at home decided birds were boring and seals were not. So the bird became a seal, the sky became the ocean, and the pipes became ice and rocks. The "Bonk!" on the game over screen was not my idea.
+
+## How to play
+
+| Do this      | Press                         |
 | ------------ | ----------------------------- |
-| Swim         | Tap, click, `Space` or `↑`    |
+| Swim up      | Tap, click, `Space` or `↑`    |
 | Pause        | `Esc` or `P`                  |
 | Sound on/off | `M`                           |
 
-## Run it
+The best score is saved in your browser. The current record at our house is hard to beat and I've been told not to reset it.
 
-Open `index.html` in your browser. No install, no build.
+## Playtester wishlist
 
-## Publish it on GitHub Pages
+Requests from the most demanding playtester I know:
 
-1. In the repo, go to **Settings → Pages** and set **Source** to **GitHub Actions**.
-2. Push to `master`. The game goes live at `https://<user>.github.io/<repo>/`.
+- [x] A seal instead of a bird
+- [x] Make it say "Bonk!"
+- [ ] Fish to collect
+- [ ] A penguin friend
+- [ ] Nighttime with stars
 
-## What's inside
+## Running it
 
-```
-index.html      page and menus
-css/style.css   styles
-js/game.js      the game
-fonts/          Fredoka font (SIL Open Font License)
-```
+Open `index.html` in a browser. It doesn't need an install, a build step or the internet.
 
-The seal, the scenery and the sounds are all made in code. There are no image or audio files.
+Everything you see and hear is drawn and made in code, so there are no image or sound files. The font is [Fredoka](https://fonts.google.com/specimen/Fredoka) (SIL Open Font License), stored in `fonts/`.
