@@ -36,4 +36,4 @@ js/game.js      the game
 fonts/          Fredoka font (SIL Open Font License)
 ```
 
-The seal, the scenery and the sounds are all made in code. The game loads no images or audio files.
+The seal, the scenery and the sounds are all made in code. There are no image or audio files.
