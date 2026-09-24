@@ -1,11 +1,59 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Flappy Bird</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Seal Dive</title>
+  <meta name="description" content="A small ocean arcade game. Guide a seal through the gaps between ice and rock.">
+  <meta name="theme-color" content="#0a2f4a">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <canvas id="canvas" width="288" height="512"></canvas>
-    <script src="js/game.js"> </script>
+  <main class="stage" id="stage" data-state="ready">
+    <canvas id="canvas" role="img" aria-label="Seal Dive playfield"></canvas>
+
+    <div class="hud">
+      <button class="icon-btn" id="pauseBtn" type="button" aria-label="Pause" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1.5"/><rect x="14" y="5" width="4" height="14" rx="1.5"/></svg>
+      </button>
+      <output class="score" id="score" aria-live="polite" hidden>0</output>
+      <button class="icon-btn icon-btn--right" id="muteBtn" type="button" aria-label="Mute" aria-pressed="false">
+        <svg class="icon-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="wave" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg>
+        <svg class="icon-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="wave" d="M16 9.5l5 5M21 9.5l-5 5"/></svg>
+      </button>
+    </div>
+
+    <section class="screen screen--start" id="startScreen" aria-labelledby="title">
+      <div>
+        <h1 class="title" id="title">Seal <span>Dive</span></h1>
+        <p class="best">Best&nbsp;<b id="startBest">0</b></p>
+      </div>
+      <p class="hint"><span class="hint-touch">Tap</span><span class="hint-key">Click or press <kbd>Space</kbd></span> to swim</p>
+    </section>
+
+    <section class="screen screen--over" id="overScreen" aria-labelledby="overTitle" hidden>
+      <div class="card">
+        <h2 id="overTitle">Bonk!</h2>
+        <p class="badge" id="newBest" hidden>New best</p>
+        <dl class="stats">
+          <div><dt>Score</dt><dd id="finalScore">0</dd></div>
+          <div><dt>Best</dt><dd id="finalBest">0</dd></div>
+        </dl>
+        <button class="btn" id="restartBtn" type="button">Swim again</button>
+        <p class="small"><span class="hint-touch">or tap anywhere</span><span class="hint-key">or press <kbd>Space</kbd></span></p>
+      </div>
+    </section>
+
+    <section class="screen screen--pause" id="pauseScreen" aria-labelledby="pauseTitle" hidden>
+      <div class="card">
+        <h2 id="pauseTitle">Paused</h2>
+        <button class="btn" id="resumeBtn" type="button">Resume</button>
+        <p class="small hint-key"><kbd>Esc</kbd> pause · <kbd>M</kbd> sound</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/game.js"></script>
 </body>
 </html>
