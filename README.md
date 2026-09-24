@@ -39,3 +39,13 @@ Requests from the most demanding playtester I know:
 Open `index.html` in a browser. It doesn't need an install, a build step or the internet.
 
 Everything you see and hear is drawn and made in code, so there are no image or sound files. The font is [Fredoka](https://fonts.google.com/specimen/Fredoka) (SIL Open Font License), stored in `fonts/`.
+
+## Tests
+
+A few browser tests check that the game starts, pauses, ends and remembers your settings:
+
+```
+pnpm install
+pnpm exec playwright install chromium
+pnpm test
+```

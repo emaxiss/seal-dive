@@ -1,4 +1,4 @@
-/* Seal Dive — swim a seal between the ice and the rocks.
+/* Seal Dive: swim a seal between the ice and the rocks.
  * Everything on screen is drawn with the Canvas 2D API; no image assets. */
 (() => {
   "use strict";
@@ -86,7 +86,7 @@
   }
 
   // ---------------------------------------------------------------------------
-  // Sound — tiny synthesized effects, nothing to download
+  // Sound: tiny synthesized effects, nothing to download
   // ---------------------------------------------------------------------------
 
   const sound = (() => {
@@ -1169,7 +1169,7 @@
   window.addEventListener("resize", resize);
 
   // ---------------------------------------------------------------------------
-  // Main loop — fixed-size substeps keep physics identical at 60, 120 or 144 Hz
+  // Main loop: fixed-size substeps keep physics identical at 60, 120 or 144 Hz
   // ---------------------------------------------------------------------------
 
   const STEP = 1 / 120;
