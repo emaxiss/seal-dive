@@ -2,6 +2,8 @@
 
 A seal, some ice, some rocks, and a lot of "one more try".
 
+**[Play it here](https://emaxiss.github.io/seal-dive/)**
+
 <p>
   <img src="docs/start.png" width="240" alt="Title screen">
   <img src="docs/play.png" width="240" alt="Swimming between ice and rocks">
