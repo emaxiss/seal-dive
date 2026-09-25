@@ -18,6 +18,7 @@ Then a certain someone at home decided birds were boring and seals were not. So 
 
 | Do this      | Press                         |
 | ------------ | ----------------------------- |
+| Pick a seal  | Tap one, or `←` `→`           |
 | Swim up      | Tap, click, `Space` or `↑`    |
 | Pause        | `Esc` or `P`                  |
 | Sound on/off | `M`                           |
@@ -33,6 +34,7 @@ Requests from the most demanding playtester I know:
 - [ ] Fish to collect
 - [ ] A penguin friend
 - [ ] Nighttime with stars
+- [x] Pick your seal before you dive (harbor, harp or monk)
 
 ## Running it
 

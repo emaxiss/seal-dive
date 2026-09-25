@@ -14,6 +14,7 @@ export class GamePage {
     this.newBest = page.locator("#newBest");
     this.restartButton = page.locator("#restartBtn");
     this.muteButton = page.locator("#muteBtn");
+    this.selectedSeal = page.locator('.pick[aria-checked="true"]');
   }
 
   async open({ best } = {}) {
@@ -21,6 +22,14 @@ export class GamePage {
       await this.page.addInitScript((value) => localStorage.setItem("sealdive.best", value), String(best));
     }
     await this.page.goto("/");
+  }
+
+  pickSeal(name) {
+    return this.page.getByRole("radio", { name }).click();
+  }
+
+  nextSeal() {
+    return this.page.keyboard.press("ArrowRight");
   }
 
   swim() {

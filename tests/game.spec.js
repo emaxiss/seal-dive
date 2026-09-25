@@ -57,3 +57,22 @@ test("mute is remembered after reload", async ({ game }) => {
   await game.reload();
   await expect(game.muteButton).toHaveAttribute("aria-pressed", "true");
 });
+
+test("picked seal is remembered after reload", async ({ game }) => {
+  await game.open();
+  await expect(game.selectedSeal).toHaveText("Harbor");
+  await game.pickSeal("Harp");
+  await expect(game.selectedSeal).toHaveText("Harp");
+  await game.reload();
+  await expect(game.selectedSeal).toHaveText("Harp");
+});
+
+test("arrow keys switch seals and wrap around", async ({ game }) => {
+  await game.open();
+  await game.nextSeal();
+  await expect(game.selectedSeal).toHaveText("Harp");
+  await game.nextSeal();
+  await expect(game.selectedSeal).toHaveText("Monk");
+  await game.nextSeal();
+  await expect(game.selectedSeal).toHaveText("Harbor");
+});
