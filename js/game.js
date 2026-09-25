@@ -31,7 +31,7 @@
 
   const SKINS = {
     harbor: { name: "Harbor", fur: ["#6f8599", "#97a9b8", "#e3e9ee"], back: "#5b6f82", front: "#7f93a5", spots: "rgba(60, 80, 100, 0.35)", outline: "#34475a", muzzle: "#eef2f5", whiskers: "rgba(255, 255, 255, 0.85)" },
-    harp: { name: "Harp", fur: ["#dce6ee", "#f3f8fb", "#ffffff"], back: "#c5d4df", front: "#d4dfe8", spots: "rgba(0, 0, 0, 0)", outline: "#5f7489", muzzle: "#ffffff", whiskers: "#3d5266", whiskerWidth: 1.2, sx: 0.92, sy: 1.16, eye: 1.2, tuft: true },
+    harp: { name: "Harp", fur: ["#dce6ee", "#f3f8fb", "#ffffff"], back: "#c5d4df", front: "#d4dfe8", spots: "rgba(0, 0, 0, 0)", outline: "#5f7489", muzzle: "#ffffff", whiskers: "#3d5266", whiskerWidth: 1.2, sx: 0.84, sy: 1.06, eye: 1.1, tuft: true },
     monk: { name: "Monk", fur: ["#5e5955", "#8b847d", "#eadfce"], back: "#4f4a46", front: "#736c66", spots: "rgba(0, 0, 0, 0)", outline: "#2f2b28", muzzle: "#f0e6d8", whiskers: "rgba(255, 250, 240, 0.85)", sx: 1.1, sy: 0.88 },
   };
 
