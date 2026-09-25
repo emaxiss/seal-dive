@@ -31,8 +31,8 @@
 
   const SKINS = {
     harbor: { name: "Harbor", fur: ["#6f8599", "#97a9b8", "#e3e9ee"], back: "#5b6f82", front: "#7f93a5", spots: "rgba(60, 80, 100, 0.35)", outline: "#34475a", muzzle: "#eef2f5", whiskers: "rgba(255, 255, 255, 0.85)" },
-    harp: { name: "Harp", fur: ["#dce6ee", "#f3f8fb", "#ffffff"], back: "#c5d4df", front: "#d4dfe8", spots: "rgba(0, 0, 0, 0)", outline: "#5f7489", muzzle: "#ffffff", whiskers: "#3d5266", whiskerWidth: 1.2 },
-    monk: { name: "Monk", fur: ["#5e5955", "#8b847d", "#eadfce"], back: "#4f4a46", front: "#736c66", spots: "rgba(0, 0, 0, 0)", outline: "#2f2b28", muzzle: "#f0e6d8", whiskers: "rgba(255, 250, 240, 0.85)" },
+    harp: { name: "Harp", fur: ["#dce6ee", "#f3f8fb", "#ffffff"], back: "#c5d4df", front: "#d4dfe8", spots: "rgba(0, 0, 0, 0)", outline: "#5f7489", muzzle: "#ffffff", whiskers: "#3d5266", whiskerWidth: 1.2, sx: 0.92, sy: 1.16, eye: 1.2, tuft: true },
+    monk: { name: "Monk", fur: ["#5e5955", "#8b847d", "#eadfce"], back: "#4f4a46", front: "#736c66", spots: "rgba(0, 0, 0, 0)", outline: "#2f2b28", muzzle: "#f0e6d8", whiskers: "rgba(255, 250, 240, 0.85)", sx: 1.1, sy: 0.88 },
   };
 
   const COLORS = {
@@ -866,6 +866,11 @@
     c.translate(s.x, s.y);
     c.rotate(s.angle);
     c.scale(SEAL_SCALE, SEAL_SCALE * s.flip);
+    // Each seal keeps the same face but gets its own build: chubby, regular or sleek.
+    const sx = skin.sx || 1;
+    const sy = skin.sy || 1;
+    const eye = skin.eye || 1;
+    c.scale(sx, sy);
     c.lineJoin = "round";
     c.lineCap = "round";
 
@@ -933,6 +938,18 @@
     c.strokeStyle = outline;
     c.stroke();
 
+    // A little tuft of pup fur on top of the head
+    if (skin.tuft) {
+      c.strokeStyle = outline;
+      c.lineWidth = 1.4;
+      c.beginPath();
+      c.moveTo(16, -15.5);
+      c.quadraticCurveTo(15, -20, 11.5, -21);
+      c.moveTo(20, -15);
+      c.quadraticCurveTo(21, -19.5, 18, -21.5);
+      c.stroke();
+    }
+
     // Front flipper paddles with each stroke
     c.save();
     c.translate(8, 11);
@@ -993,14 +1010,14 @@
     } else {
       c.fillStyle = "#1c232c";
       c.beginPath();
-      c.ellipse(26, -5.5, 3.8, 4.4, 0, 0, Math.PI * 2);
+      c.ellipse(26, -5.5, (3.8 * eye) / sx, (4.4 * eye) / sy, 0, 0, Math.PI * 2);
       c.fill();
       c.fillStyle = "#ffffff";
       c.beginPath();
-      c.arc(27.3, -7.2, 1.5, 0, Math.PI * 2);
+      c.ellipse(26 + (1.3 * eye) / sx, -5.5 - (1.7 * eye) / sy, (1.5 * eye) / sx, (1.5 * eye) / sy, 0, 0, Math.PI * 2);
       c.fill();
       c.beginPath();
-      c.arc(25, -3.8, 0.6, 0, Math.PI * 2);
+      c.ellipse(26 - 1 / sx, -5.5 + (1.7 * eye) / sy, 0.6 / sx, 0.6 / sy, 0, 0, Math.PI * 2);
       c.fill();
     }
 
