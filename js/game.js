@@ -31,7 +31,7 @@
 
   const SKINS = {
     harbor: { name: "Harbor", fur: ["#6f8599", "#97a9b8", "#e3e9ee"], back: "#5b6f82", front: "#7f93a5", spots: "rgba(60, 80, 100, 0.35)", outline: "#34475a", muzzle: "#eef2f5", whiskers: "rgba(255, 255, 255, 0.85)" },
-    harp: { name: "Harp", fur: ["#dce6ee", "#f3f8fb", "#ffffff"], back: "#c5d4df", front: "#d4dfe8", spots: "rgba(0, 0, 0, 0)", outline: "#5f7489", muzzle: "#ffffff", whiskers: "rgba(95, 116, 137, 0.6)" },
+    harp: { name: "Harp", fur: ["#dce6ee", "#f3f8fb", "#ffffff"], back: "#c5d4df", front: "#d4dfe8", spots: "rgba(0, 0, 0, 0)", outline: "#5f7489", muzzle: "#ffffff", whiskers: "#3d5266", whiskerWidth: 1.2 },
     monk: { name: "Monk", fur: ["#5e5955", "#8b847d", "#eadfce"], back: "#4f4a46", front: "#736c66", spots: "rgba(0, 0, 0, 0)", outline: "#2f2b28", muzzle: "#f0e6d8", whiskers: "rgba(255, 250, 240, 0.85)" },
   };
 
@@ -1006,7 +1006,7 @@
 
     // Whiskers
     c.strokeStyle = skin.whiskers;
-    c.lineWidth = 0.8;
+    c.lineWidth = skin.whiskerWidth || 0.8;
     for (const [dy, ey] of [[3.6, -1], [5, 5], [6.4, 10]]) {
       c.beginPath();
       c.moveTo(35, dy);
@@ -1201,6 +1201,9 @@
 
   $("restartBtn").addEventListener("click", () => { if (game.state === "over") start(); });
   $("resumeBtn").addEventListener("click", resume);
+  for (const id of ["menuBtn", "pauseMenuBtn"]) {
+    $(id).addEventListener("click", () => { if (game.state === "over" || game.state === "paused") toReady(); });
+  }
   $("pauseBtn").addEventListener("click", (e) => { e.currentTarget.blur(); pause(); });
   $("muteBtn").addEventListener("click", (e) => { e.currentTarget.blur(); sound.toggle(); ui.syncMute(); });
 

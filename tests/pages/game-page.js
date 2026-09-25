@@ -13,6 +13,8 @@ export class GamePage {
     this.finalBest = page.locator("#finalBest");
     this.newBest = page.locator("#newBest");
     this.restartButton = page.locator("#restartBtn");
+    this.menuButton = page.locator("#menuBtn");
+    this.pauseMenuButton = page.locator("#pauseMenuBtn");
     this.muteButton = page.locator("#muteBtn");
     this.selectedSeal = page.locator('.pick[aria-checked="true"]');
   }

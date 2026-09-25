@@ -76,3 +76,24 @@ test("arrow keys switch seals and wrap around", async ({ game }) => {
   await game.nextSeal();
   await expect(game.selectedSeal).toHaveText("Harbor");
 });
+
+test("menu after game over lets you pick another seal", async ({ game }) => {
+  await game.open();
+  await game.swim();
+  await game.waitForGameOver();
+  await game.menuButton.click();
+  await expect(game.stage).toHaveAttribute("data-state", "ready");
+  await game.pickSeal("Monk");
+  await game.swim();
+  await expect(game.stage).toHaveAttribute("data-state", "playing");
+  await expect(game.selectedSeal).toHaveText("Monk");
+});
+
+test("menu from pause goes back to the start screen", async ({ game }) => {
+  await game.open();
+  await game.swim();
+  await game.togglePause();
+  await game.pauseMenuButton.click();
+  await expect(game.stage).toHaveAttribute("data-state", "ready");
+  await expect(game.startScreen).toBeVisible();
+});

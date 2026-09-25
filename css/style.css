@@ -344,6 +344,14 @@ kbd {
   outline-offset: calc(var(--u) * 3);
 }
 
+.btn--ghost,
+.btn--ghost:active {
+  margin-top: calc(var(--u) * 10);
+  background: transparent;
+  color: var(--ink);
+  box-shadow: inset 0 0 0 calc(var(--u) * 2) var(--ink);
+}
+
 .small {
   margin: calc(var(--u) * 12) 0 0;
   font-size: calc(var(--u) * 15);
