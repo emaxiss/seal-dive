@@ -29,7 +29,10 @@
         <h1 class="title" id="title">Seal <span>Dive</span></h1>
         <p class="best">Best&nbsp;<b id="startBest">0</b></p>
       </div>
-      <p class="hint"><span class="hint-touch">Tap</span><span class="hint-key">Click or press <kbd>Space</kbd></span> to swim</p>
+      <div class="start-bottom">
+        <div class="picker" id="picker" role="radiogroup" aria-label="Choose your seal"></div>
+        <p class="hint"><span class="hint-touch">Tap</span><span class="hint-key">Click or press <kbd>Space</kbd></span> to swim</p>
+      </div>
     </section>
 
     <section class="screen screen--over" id="overScreen" aria-labelledby="overTitle" hidden>
@@ -41,6 +44,7 @@
           <div><dt>Best</dt><dd id="finalBest">0</dd></div>
         </dl>
         <button class="btn" id="restartBtn" type="button">Swim again</button>
+        <button class="btn btn--ghost" id="menuBtn" type="button">Menu</button>
         <p class="small"><span class="hint-touch">or tap anywhere</span><span class="hint-key">or press <kbd>Space</kbd></span></p>
       </div>
     </section>
@@ -49,6 +53,7 @@
       <div class="card">
         <h2 id="pauseTitle">Paused</h2>
         <button class="btn" id="resumeBtn" type="button">Resume</button>
+        <button class="btn btn--ghost" id="pauseMenuBtn" type="button">Menu</button>
         <p class="small hint-key"><kbd>Esc</kbd> pause · <kbd>M</kbd> sound</p>
       </div>
     </section>

@@ -27,6 +27,13 @@
 
   const STORAGE_BEST = "sealdive.best";
   const STORAGE_MUTED = "sealdive.muted";
+  const STORAGE_SKIN = "sealdive.seal";
+
+  const SKINS = {
+    harbor: { name: "Harbor", fur: ["#6f8599", "#97a9b8", "#e3e9ee"], back: "#5b6f82", front: "#7f93a5", spots: "rgba(60, 80, 100, 0.35)", outline: "#34475a", muzzle: "#eef2f5", whiskers: "rgba(255, 255, 255, 0.85)" },
+    harp: { name: "Harp", fur: ["#dce6ee", "#f3f8fb", "#ffffff"], back: "#c5d4df", front: "#d4dfe8", spots: "rgba(0, 0, 0, 0)", outline: "#5f7489", muzzle: "#ffffff", whiskers: "#3d5266", whiskerWidth: 1.2, sx: 0.84, sy: 1.06, eye: 1.1, tuft: true },
+    monk: { name: "Monk", fur: ["#5e5955", "#8b847d", "#eadfce"], back: "#4f4a46", front: "#736c66", spots: "rgba(0, 0, 0, 0)", outline: "#2f2b28", muzzle: "#f0e6d8", whiskers: "rgba(255, 250, 240, 0.85)", sx: 1.1, sy: 0.88 },
+  };
 
   const COLORS = {
     waterTop: "#86d8df",
@@ -339,6 +346,7 @@
     state: "ready", // ready | playing | dying | over | paused
     score: 0,
     best: Number(storage.get(STORAGE_BEST)) || 0,
+    skin: SKINS[storage.get(STORAGE_SKIN)] ? storage.get(STORAGE_SKIN) : "harbor",
     speed: SPEED_START,
     scroll: 0,      // total distance travelled, drives parallax
     time: 0,
@@ -851,163 +859,179 @@
   }
 
   // The seal, facing right, drawn around its centre. Roughly 76 × 32 px.
-  function drawSeal() {
-    const flap = Math.sin(seal.flipper);
-    const dead = game.state === "dying" || game.state === "over";
+  function drawSeal(c, s, skin, dead) {
+    const flap = Math.sin(s.flipper);
 
-    ctx.save();
-    ctx.translate(seal.x, seal.y);
-    ctx.rotate(seal.angle);
-    ctx.scale(SEAL_SCALE, SEAL_SCALE * seal.flip);
-    ctx.lineJoin = "round";
-    ctx.lineCap = "round";
+    c.save();
+    c.translate(s.x, s.y);
+    c.rotate(s.angle);
+    c.scale(SEAL_SCALE, SEAL_SCALE * s.flip);
+    // Each seal keeps the same face but gets its own build: chubby, regular or sleek.
+    const sx = skin.sx || 1;
+    const sy = skin.sy || 1;
+    const eye = skin.eye || 1;
+    c.scale(sx, sy);
+    c.lineJoin = "round";
+    c.lineCap = "round";
 
-    const outline = "#34475a";
+    const outline = skin.outline;
 
     // Rear flippers
     const tailFlipper = (spread) => {
-      ctx.save();
-      ctx.translate(-35, 0);
-      ctx.rotate(spread);
-      ctx.beginPath();
-      ctx.moveTo(0, -2);
-      ctx.quadraticCurveTo(-8, -10, -19, -9);
-      ctx.lineTo(-16, -5);
-      ctx.lineTo(-20, -2);
-      ctx.lineTo(-15, 0);
-      ctx.quadraticCurveTo(-7, 3, 0, 2);
-      ctx.closePath();
-      ctx.fillStyle = "#5b6f82";
-      ctx.fill();
-      ctx.lineWidth = 1.6;
-      ctx.strokeStyle = outline;
-      ctx.stroke();
-      ctx.restore();
+      c.save();
+      c.translate(-35, 0);
+      c.rotate(spread);
+      c.beginPath();
+      c.moveTo(0, -2);
+      c.quadraticCurveTo(-8, -10, -19, -9);
+      c.lineTo(-16, -5);
+      c.lineTo(-20, -2);
+      c.lineTo(-15, 0);
+      c.quadraticCurveTo(-7, 3, 0, 2);
+      c.closePath();
+      c.fillStyle = skin.back;
+      c.fill();
+      c.lineWidth = 1.6;
+      c.strokeStyle = outline;
+      c.stroke();
+      c.restore();
     };
     tailFlipper(-0.28 + flap * 0.22);
     tailFlipper(0.28 + flap * 0.22);
 
     // Body
-    ctx.beginPath();
-    ctx.moveTo(38, 3);
-    ctx.bezierCurveTo(38, -6, 32, -14, 22, -15);
-    ctx.bezierCurveTo(8, -17, -12, -14, -26, -7);
-    ctx.bezierCurveTo(-32, -4, -36, -2, -38, 0);
-    ctx.bezierCurveTo(-32, 6, -20, 15, 0, 15);
-    ctx.bezierCurveTo(16, 15, 26, 12, 32, 9);
-    ctx.bezierCurveTo(36, 8, 38, 6, 38, 3);
-    ctx.closePath();
-    const fur = ctx.createLinearGradient(0, -16, 0, 16);
-    fur.addColorStop(0, "#6f8599");
-    fur.addColorStop(0.45, "#97a9b8");
-    fur.addColorStop(1, "#e3e9ee");
-    ctx.fillStyle = fur;
-    ctx.fill();
+    c.beginPath();
+    c.moveTo(38, 3);
+    c.bezierCurveTo(38, -6, 32, -14, 22, -15);
+    c.bezierCurveTo(8, -17, -12, -14, -26, -7);
+    c.bezierCurveTo(-32, -4, -36, -2, -38, 0);
+    c.bezierCurveTo(-32, 6, -20, 15, 0, 15);
+    c.bezierCurveTo(16, 15, 26, 12, 32, 9);
+    c.bezierCurveTo(36, 8, 38, 6, 38, 3);
+    c.closePath();
+    const fur = c.createLinearGradient(0, -16, 0, 16);
+    fur.addColorStop(0, skin.fur[0]);
+    fur.addColorStop(0.45, skin.fur[1]);
+    fur.addColorStop(1, skin.fur[2]);
+    c.fillStyle = fur;
+    c.fill();
 
     // Spots, clipped to the body
-    ctx.save();
-    ctx.clip();
-    ctx.fillStyle = "rgba(60, 80, 100, 0.35)";
+    c.save();
+    c.clip();
+    c.fillStyle = skin.spots;
     for (const [sx, sy, sr] of [[-18, -8, 2.6], [-8, -11, 2], [4, -12, 2.8], [-26, -2, 1.8], [12, -9, 1.6], [-12, -4, 1.6], [16, -13, 1.4]]) {
-      ctx.beginPath();
-      ctx.ellipse(sx, sy, sr * 1.3, sr, 0.3, 0, Math.PI * 2);
-      ctx.fill();
+      c.beginPath();
+      c.ellipse(sx, sy, sr * 1.3, sr, 0.3, 0, Math.PI * 2);
+      c.fill();
     }
     // Back highlight
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.35)";
-    ctx.lineWidth = 2.5;
-    ctx.beginPath();
-    ctx.moveTo(-14, -12);
-    ctx.quadraticCurveTo(4, -16, 20, -13);
-    ctx.stroke();
-    ctx.restore();
+    c.strokeStyle = "rgba(255, 255, 255, 0.35)";
+    c.lineWidth = 2.5;
+    c.beginPath();
+    c.moveTo(-14, -12);
+    c.quadraticCurveTo(4, -16, 20, -13);
+    c.stroke();
+    c.restore();
 
-    ctx.lineWidth = 1.8;
-    ctx.strokeStyle = outline;
-    ctx.stroke();
+    c.lineWidth = 1.8;
+    c.strokeStyle = outline;
+    c.stroke();
+
+    // A little tuft of pup fur on top of the head
+    if (skin.tuft) {
+      c.strokeStyle = outline;
+      c.lineWidth = 1.4;
+      c.beginPath();
+      c.moveTo(16, -15.5);
+      c.quadraticCurveTo(15, -20, 11.5, -21);
+      c.moveTo(20, -15);
+      c.quadraticCurveTo(21, -19.5, 18, -21.5);
+      c.stroke();
+    }
 
     // Front flipper paddles with each stroke
-    ctx.save();
-    ctx.translate(8, 11);
-    ctx.rotate(0.55 - seal.stroke * 0.9 + flap * 0.12);
-    ctx.beginPath();
-    ctx.moveTo(-3, -1);
-    ctx.quadraticCurveTo(-10, 6, -14, 12);
-    ctx.quadraticCurveTo(-9, 12, -5, 9);
-    ctx.quadraticCurveTo(0, 5, 3, 0);
-    ctx.closePath();
-    ctx.fillStyle = "#7f93a5";
-    ctx.fill();
-    ctx.lineWidth = 1.5;
-    ctx.strokeStyle = outline;
-    ctx.stroke();
-    ctx.restore();
+    c.save();
+    c.translate(8, 11);
+    c.rotate(0.55 - s.stroke * 0.9 + flap * 0.12);
+    c.beginPath();
+    c.moveTo(-3, -1);
+    c.quadraticCurveTo(-10, 6, -14, 12);
+    c.quadraticCurveTo(-9, 12, -5, 9);
+    c.quadraticCurveTo(0, 5, 3, 0);
+    c.closePath();
+    c.fillStyle = skin.front;
+    c.fill();
+    c.lineWidth = 1.5;
+    c.strokeStyle = outline;
+    c.stroke();
+    c.restore();
 
     // Muzzle
-    ctx.fillStyle = "#eef2f5";
-    ctx.beginPath();
-    ctx.ellipse(33, 5, 5.5, 4.2, 0.2, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = "rgba(52, 71, 90, 0.5)";
+    c.fillStyle = skin.muzzle;
+    c.beginPath();
+    c.ellipse(33, 5, 5.5, 4.2, 0.2, 0, Math.PI * 2);
+    c.fill();
+    c.fillStyle = "rgba(52, 71, 90, 0.5)";
     for (const [dx, dy] of [[31, 4], [33.5, 3.4], [32.5, 6.4], [35, 5.6]]) {
-      ctx.beginPath();
-      ctx.arc(dx, dy, 0.6, 0, Math.PI * 2);
-      ctx.fill();
+      c.beginPath();
+      c.arc(dx, dy, 0.6, 0, Math.PI * 2);
+      c.fill();
     }
 
     // Cheek
-    ctx.fillStyle = "rgba(255, 150, 150, 0.28)";
-    ctx.beginPath();
-    ctx.ellipse(24, 4, 4, 2.6, 0, 0, Math.PI * 2);
-    ctx.fill();
+    c.fillStyle = "rgba(255, 150, 150, 0.28)";
+    c.beginPath();
+    c.ellipse(24, 4, 4, 2.6, 0, 0, Math.PI * 2);
+    c.fill();
 
     // Nose
-    ctx.fillStyle = "#2b3440";
-    ctx.beginPath();
-    ctx.ellipse(37, 1, 2.4, 1.8, 0.3, 0, Math.PI * 2);
-    ctx.fill();
+    c.fillStyle = "#2b3440";
+    c.beginPath();
+    c.ellipse(37, 1, 2.4, 1.8, 0.3, 0, Math.PI * 2);
+    c.fill();
 
     // Mouth
-    ctx.strokeStyle = outline;
-    ctx.lineWidth = 1.1;
-    ctx.beginPath();
-    ctx.moveTo(35.5, 7.4);
-    ctx.quadraticCurveTo(33, 9.4, 30.5, 8);
-    ctx.stroke();
+    c.strokeStyle = outline;
+    c.lineWidth = 1.1;
+    c.beginPath();
+    c.moveTo(35.5, 7.4);
+    c.quadraticCurveTo(33, 9.4, 30.5, 8);
+    c.stroke();
 
     // Eye
     if (dead) {
-      ctx.strokeStyle = "#1c232c";
-      ctx.lineWidth = 1.6;
-      ctx.beginPath();
-      ctx.moveTo(23.5, -8); ctx.lineTo(28.5, -3);
-      ctx.moveTo(28.5, -8); ctx.lineTo(23.5, -3);
-      ctx.stroke();
+      c.strokeStyle = "#1c232c";
+      c.lineWidth = 1.6;
+      c.beginPath();
+      c.moveTo(23.5, -8); c.lineTo(28.5, -3);
+      c.moveTo(28.5, -8); c.lineTo(23.5, -3);
+      c.stroke();
     } else {
-      ctx.fillStyle = "#1c232c";
-      ctx.beginPath();
-      ctx.ellipse(26, -5.5, 3.8, 4.4, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = "#ffffff";
-      ctx.beginPath();
-      ctx.arc(27.3, -7.2, 1.5, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(25, -3.8, 0.6, 0, Math.PI * 2);
-      ctx.fill();
+      c.fillStyle = "#1c232c";
+      c.beginPath();
+      c.ellipse(26, -5.5, (3.8 * eye) / sx, (4.4 * eye) / sy, 0, 0, Math.PI * 2);
+      c.fill();
+      c.fillStyle = "#ffffff";
+      c.beginPath();
+      c.ellipse(26 + (1.3 * eye) / sx, -5.5 - (1.7 * eye) / sy, (1.5 * eye) / sx, (1.5 * eye) / sy, 0, 0, Math.PI * 2);
+      c.fill();
+      c.beginPath();
+      c.ellipse(26 - 1 / sx, -5.5 + (1.7 * eye) / sy, 0.6 / sx, 0.6 / sy, 0, 0, Math.PI * 2);
+      c.fill();
     }
 
     // Whiskers
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.85)";
-    ctx.lineWidth = 0.8;
+    c.strokeStyle = skin.whiskers;
+    c.lineWidth = skin.whiskerWidth || 0.8;
     for (const [dy, ey] of [[3.6, -1], [5, 5], [6.4, 10]]) {
-      ctx.beginPath();
-      ctx.moveTo(35, dy);
-      ctx.quadraticCurveTo(41, (dy + ey) / 2, 46, ey);
-      ctx.stroke();
+      c.beginPath();
+      c.moveTo(35, dy);
+      c.quadraticCurveTo(41, (dy + ey) / 2, 46, ey);
+      c.stroke();
     }
 
-    ctx.restore();
+    c.restore();
   }
 
   function render() {
@@ -1032,7 +1056,7 @@
 
     drawTiled(layers.ground, game.scroll, H - SEABED - 12);
     drawBubbles();
-    drawSeal();
+    drawSeal(ctx, seal, SKINS[game.skin], game.state === "dying" || game.state === "over");
     drawSurface();
     ctx.restore();
 
@@ -1151,6 +1175,9 @@
     } else if (key === "Escape" || key === "KeyP") {
       if (game.state === "playing") pause();
       else if (game.state === "paused") resume();
+    } else if ((key === "ArrowLeft" || key === "ArrowRight") && game.state === "ready") {
+      const i = skinIds.indexOf(game.skin) + (key === "ArrowLeft" ? -1 : 1);
+      pickSkin(skinIds[(i + skinIds.length) % skinIds.length]);
     } else if (key === "KeyM") {
       sound.toggle();
       ui.syncMute();
@@ -1159,8 +1186,41 @@
     }
   });
 
+  // Seal picker on the start screen
+  const skinIds = Object.keys(SKINS);
+  const thumbPose = { x: 62, y: 38, angle: -0.08, flip: 1, flipper: 0.8, stroke: 0 };
+
+  function pickSkin(id) {
+    game.skin = id;
+    storage.set(STORAGE_SKIN, id);
+    for (const btn of $("picker").children) btn.setAttribute("aria-checked", String(btn.dataset.skin === id));
+  }
+
+  for (const id of skinIds) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "pick";
+    btn.dataset.skin = id;
+    btn.setAttribute("role", "radio");
+    const thumb = document.createElement("canvas");
+    thumb.width = 240;
+    thumb.height = 144;
+    const c = thumb.getContext("2d");
+    c.scale(2, 2);
+    drawSeal(c, thumbPose, SKINS[id], false);
+    const label = document.createElement("span");
+    label.textContent = SKINS[id].name;
+    btn.append(thumb, label);
+    btn.addEventListener("click", () => pickSkin(id));
+    $("picker").append(btn);
+  }
+  pickSkin(game.skin);
+
   $("restartBtn").addEventListener("click", () => { if (game.state === "over") start(); });
   $("resumeBtn").addEventListener("click", resume);
+  for (const id of ["menuBtn", "pauseMenuBtn"]) {
+    $(id).addEventListener("click", () => { if (game.state === "over" || game.state === "paused") toReady(); });
+  }
   $("pauseBtn").addEventListener("click", (e) => { e.currentTarget.blur(); pause(); });
   $("muteBtn").addEventListener("click", (e) => { e.currentTarget.blur(); sound.toggle(); ui.syncMute(); });
 

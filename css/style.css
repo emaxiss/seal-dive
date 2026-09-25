@@ -184,6 +184,53 @@ canvas {
   50% { transform: translateY(calc(var(--u) * -4)); }
 }
 
+.start-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(var(--u) * 16);
+}
+
+.picker {
+  display: flex;
+  gap: calc(var(--u) * 10);
+  pointer-events: auto;
+}
+
+.pick {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(var(--u) * 2);
+  width: calc(var(--u) * 92);
+  padding: calc(var(--u) * 6) 0 calc(var(--u) * 8);
+  border: 0;
+  border-radius: calc(var(--u) * 16);
+  background: rgb(11 42 66 / 0.55);
+  color: #fff;
+  font: inherit;
+  font-size: calc(var(--u) * 15);
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease-out;
+}
+
+.pick canvas {
+  width: calc(var(--u) * 80);
+  height: calc(var(--u) * 48);
+}
+
+.pick:hover { transform: translateY(calc(var(--u) * -2)); }
+.pick:active { transform: translateY(calc(var(--u) * 1)); }
+.pick:focus-visible { outline: calc(var(--u) * 3) solid #fff; outline-offset: calc(var(--u) * 2); }
+
+.pick[aria-checked="true"] {
+  background: #bfe8f0;
+  color: var(--ink);
+  box-shadow: 0 calc(var(--u) * 4) 0 var(--ink), 0 0 0 calc(var(--u) * 3) var(--accent);
+  transform: translateY(calc(var(--u) * -3));
+}
+
 kbd {
   display: inline-block;
   padding: 0 0.4em;
@@ -295,6 +342,14 @@ kbd {
 .icon-btn:focus-visible {
   outline: calc(var(--u) * 3) solid #ffd166;
   outline-offset: calc(var(--u) * 3);
+}
+
+.btn--ghost,
+.btn--ghost:active {
+  margin-top: calc(var(--u) * 10);
+  background: transparent;
+  color: var(--ink);
+  box-shadow: inset 0 0 0 calc(var(--u) * 2) var(--ink);
 }
 
 .small {
