@@ -105,12 +105,19 @@
       if (!ac) {
         const AC = window.AudioContext || window.webkitAudioContext;
         if (!AC) return null;
+        // iPhones mute web audio on silent mode unless the page plays like media.
+        if (navigator.audioSession) navigator.audioSession.type = "playback";
         ac = new AC();
         out = ac.createGain();
         out.gain.value = muted ? 0 : 0.45;
         out.connect(ac.destination);
+        // A silent blip inside the first tap unlocks audio on older iOS.
+        const blip = ac.createBufferSource();
+        blip.buffer = ac.createBuffer(1, 1, ac.sampleRate);
+        blip.connect(ac.destination);
+        blip.start();
       }
-      if (ac.state === "suspended") ac.resume();
+      if (ac.state === "suspended") ac.resume().catch(() => {});
       return ac;
     }
 
@@ -147,9 +154,58 @@
       src.start();
     }
 
+    // Background music: a little C, Am, F, G loop scheduled just ahead of time.
+    const BEAT = 60 / 112 / 2; // eighth notes at 112 bpm
+    const MELODY = [
+      76, 79, 84, 79, 76, 0, 74, 76,
+      72, 76, 81, 76, 72, 0, 71, 72,
+      69, 72, 77, 72, 69, 0, 67, 69,
+      71, 74, 79, 74, 71, 74, 79, 0,
+    ];
+    const BASS = [48, 45, 41, 43];
+    const hz = (midi) => 440 * 2 ** ((midi - 69) / 12);
+    let musicTimer = null;
+    let step = 0;
+    let nextAt = 0;
+
+    function note(midi, at, dur, type, vol) {
+      const osc = ac.createOscillator();
+      const gain = ac.createGain();
+      osc.type = type;
+      osc.frequency.value = hz(midi);
+      gain.gain.setValueAtTime(0.0001, at);
+      gain.gain.exponentialRampToValueAtTime(vol, at + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, at + dur);
+      osc.connect(gain).connect(out);
+      osc.start(at);
+      osc.stop(at + dur + 0.02);
+    }
+
+    function scheduleMusic() {
+      while (nextAt < ac.currentTime + 0.3) {
+        if (!muted) {
+          const midi = MELODY[step % MELODY.length];
+          if (midi) note(midi, nextAt, BEAT * 0.9, "triangle", 0.07);
+          if (step % 4 === 0) note(BASS[Math.floor(step / 8) % BASS.length], nextAt, BEAT * 3.5, "sine", 0.12);
+        }
+        step++;
+        nextAt += BEAT;
+      }
+    }
+
     return {
       get muted() { return muted; },
       unlock: ready,
+      startMusic() {
+        if (musicTimer || !ready()) return;
+        nextAt = ac.currentTime + 0.05;
+        scheduleMusic();
+        musicTimer = setInterval(scheduleMusic, 100);
+      },
+      stopMusic() {
+        clearInterval(musicTimer);
+        musicTimer = null;
+      },
       toggle() {
         muted = !muted;
         storage.set(STORAGE_MUTED, muted ? "1" : "0");
@@ -1133,6 +1189,7 @@
   function pause() {
     if (game.state !== "playing") return;
     game.state = "paused";
+    sound.stopMusic();
     ui.show("paused");
     $("resumeBtn").focus({ preventScroll: true });
   }
@@ -1140,6 +1197,7 @@
   function resume() {
     if (game.state !== "paused") return;
     game.state = "playing";
+    sound.startMusic();
     ui.show("playing");
     lastFrame = performance.now();
     document.activeElement?.blur();
@@ -1148,6 +1206,7 @@
   // One action for tap, click and Space.
   function primaryAction() {
     sound.unlock();
+    sound.startMusic();
     switch (game.state) {
       case "ready": start(); break;
       case "playing": swim(); break;
@@ -1215,6 +1274,11 @@
     $("picker").append(btn);
   }
   pickSkin(game.skin);
+
+  // iPhones only allow audio after a finished tap, not at touch-down.
+  for (const type of ["touchend", "click"]) {
+    window.addEventListener(type, () => { if (game.state !== "paused") sound.startMusic(); }, { capture: true, passive: true });
+  }
 
   $("restartBtn").addEventListener("click", () => { if (game.state === "over") start(); });
   $("resumeBtn").addEventListener("click", resume);
